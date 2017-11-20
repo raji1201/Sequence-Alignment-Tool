@@ -49,7 +49,7 @@ class Register extends Component {
            <TextField
              hintText="Enter your full name"
              floatingLabelText="Full Name"
-             onChange = {(event,newValue) => this.setState({first_name:newValue})}
+             onChange = {(event,newValue) => this.setState({fullName:newValue})}
              />
            <br/>
            <TextField
@@ -70,7 +70,7 @@ class Register extends Component {
              type = "password"
              hintText="Re-enter your Password"
              floatingLabelText="Re-enter Password"
-             onChange = {(event,newValue) => this.setState({password:newValue})}
+             onChange = {(event,newValue) => this.setState({verifyPassword:newValue})}
              />
            <br/>
            <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>

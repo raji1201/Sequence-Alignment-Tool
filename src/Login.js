@@ -52,7 +52,7 @@ render() {
            <TextField
              hintText="Enter your email"
              floatingLabelText="Email"
-             onChange = {(event,newValue) => this.setState({username:newValue})}
+             onChange = {(event,newValue) => this.setState({email:newValue})}
              />
            <br/>
              <TextField
