@@ -15,7 +15,7 @@ constructor(props){
  }
 
 handleClick(event){
- var apiBaseUrl = "http://localhost:4200/api/";
+ var apiBaseUrl = "http://localhost:4200/";
  var payload={
  "email":this.state.email,
  "password":this.state.password
