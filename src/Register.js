@@ -26,7 +26,7 @@ class Register extends Component {
     "verifyPassword":this.state.verifyPassword
     }
     console.log(payload);
-    axios.post(apiBaseUrl+'register', payload)
+    axios.post(apiBaseUrl+'signup', payload)
    .then(function (response) {
      console.log(response);
      if(response.data.code == 200){
