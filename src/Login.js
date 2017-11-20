@@ -4,6 +4,7 @@ import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
+import './App.css';
 
 class Login extends Component {
 constructor(props){
@@ -15,7 +16,7 @@ constructor(props){
  }
 
 handleClick(event){
- var apiBaseUrl = "http://localhost:4200/";
+ var apiBaseUrl = "http://192.168.0.4:4200/";
  var payload={
  "email":this.state.email,
  "password":this.state.password
@@ -24,8 +25,8 @@ handleClick(event){
  axios.post(apiBaseUrl+'login', payload)
  .then(function (response) {
  console.log(response);
- if(response.response == 200){
- console.log("Login successfull");
+ if(response.status == 200){
+ console.log("Login successful");
  }
  else if(response.status == 204){
  console.log("Username password do not match");
@@ -43,12 +44,10 @@ handleClick(event){
 
 render() {
     return (
-      <div>
+      <div className="Login">
         <MuiThemeProvider>
-          <div>
-          <AppBar
-             title="Login"
-           />
+          <div className="Login">
+          
            <TextField
              hintText="Enter your email"
              floatingLabelText="Email"

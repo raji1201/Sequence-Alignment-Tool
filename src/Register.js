@@ -4,6 +4,8 @@ import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
+import './App.css';
+
 class Register extends Component {
   constructor(props){
     super(props);
@@ -16,7 +18,7 @@ class Register extends Component {
   }
 
   handleClick(event){
-    var apiBaseUrl = "http://localhost:4200/";
+    var apiBaseUrl = "http://192.168.0.4:4200/";
     console.log("values",this.state.fullName,this.state.email,this.state.password,this.state.verifyPassword);
     //To be done:check for empty values before hitting submit
     var payload={
@@ -40,12 +42,9 @@ class Register extends Component {
 
   render() {
     return (
-      <div>
+      <div className="Register">
         <MuiThemeProvider>
           <div>
-          <AppBar
-             title="Register"
-           />
            <TextField
              hintText="Enter your full name"
              floatingLabelText="Full Name"
