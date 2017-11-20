@@ -24,7 +24,7 @@ handleClick(event){
  axios.post(apiBaseUrl+'login', payload)
  .then(function (response) {
  console.log(response);
- if(response.data.code == 200){
+ if(response.response == 200){
  console.log("Login successfull");
  }
  else if(response.status == 204){
