@@ -27,7 +27,7 @@ handleClick(event){
  if(response.data.code == 200){
  console.log("Login successfull");
  }
- else if(response.data.code == 204){
+ else if(response.status == 204){
  console.log("Username password do not match");
  alert("username password do not match")
  }
