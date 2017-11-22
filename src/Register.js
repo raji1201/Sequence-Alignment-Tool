@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
@@ -32,7 +31,7 @@ class Register extends Component {
    .then(function (response) {
      console.log(response);
      if(response.status == 200){
-      console.log("registration successfull");
+      console.log("registration successful");
      }
    })
    .catch(function (error) {

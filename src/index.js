@@ -7,7 +7,7 @@ import Login from './Login';
 import Register from './Register';
 import Help from './Help';
 import Leaderboard from './Leaderboard';
-import { BrowserRouter, Link, Route } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 
 ReactDOM.render(<BrowserRouter>
 	<div>
