@@ -11,7 +11,8 @@ constructor(props){
   super(props);
   this.state={
   email:'',
-  password:''
+  password:'',
+  //isAuthenticated: this.props.location.props
   }
  }
 
@@ -27,6 +28,8 @@ handleClick(event){
  console.log(response);
  if(response.status == 200){
  console.log("Login successful");
+ this.props.location.props = true;
+ console.log(this.props.location.props);
  }
  else if(response.status == 204){
  console.log("Username password do not match");
@@ -43,6 +46,7 @@ handleClick(event){
  }
 
 render() {
+  console.log(this.props.location.props);
     return (
       <div className="Login">
         <MuiThemeProvider>
