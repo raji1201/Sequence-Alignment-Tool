@@ -25,12 +25,12 @@ componentDidMount()
 	axios.get(apiBaseUrl+'leaderboard')
 	.then(function (response) {
 	console.log(response);
-	if(response.status == 200){
+	if(response.status === 200){
 	console.log("Successful");
 	const posts = response.data.map(obj => obj.data);
         this.setState({ posts });
 	}
-	else if(response.status == 204){
+	else if(response.status === 204){
 	console.log("ERROR");
 	alert("ERROR");
 	}

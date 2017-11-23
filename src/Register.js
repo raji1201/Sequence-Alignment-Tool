@@ -30,7 +30,7 @@ class Register extends Component {
     axios.post(apiBaseUrl+'signup', payload)
    .then(function (response) {
      console.log(response);
-     if(response.status == 200){
+     if(response.status === 200){
       console.log("registration successful");
      }
    })

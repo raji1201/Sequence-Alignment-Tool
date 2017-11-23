@@ -5,6 +5,7 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import AlignmentForm from './AlignmentForm';
 import './App.css';
 import { Link } from 'react-router-dom'
 
@@ -28,7 +29,7 @@ class App extends Component {
           <AppBar
              title="Home"
              showMenuIconButton={false}
-          iconElementRight={
+              iconElementRight={
                           <IconMenu
                             iconButtonElement={<IconButton name='menu'><MoreVertIcon /></IconButton>}
                             targetOrigin={{horizontal: 'right', vertical: 'top'}}
@@ -47,6 +48,7 @@ class App extends Component {
                           />
 
            </div>
+           <AlignmentForm />
          </MuiThemeProvider>
       </div>
     );
