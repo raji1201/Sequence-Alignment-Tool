@@ -14,14 +14,14 @@ class App extends Component {
   constructor(props){
   super(props);
   this.state={
-     isAuthenticated: false
+     isAuthenticated: false,
+     id: ''
   };
  }
 
 
   render() {
 
- console.log(this.state.isAuthenticated);
     return (
       <div className="App">
         <MuiThemeProvider>
@@ -34,7 +34,7 @@ class App extends Component {
                             iconButtonElement={<IconButton name='menu'><MoreVertIcon /></IconButton>}
                             targetOrigin={{horizontal: 'right', vertical: 'top'}}
                             anchorOrigin={{horizontal: 'right', vertical: 'top'}}>
-                            <MenuItem name='Login' primaryText='Login' containerElement={<Link to={{ pathname:'/Login', props: this.state }} />}/>
+                            <MenuItem name='Login' primaryText='Login' containerElement={<Link to={{ pathname:'/Login', props: this.state.isAuthenticated }} />}/>
                             <MenuItem name='Sign up' primaryText='Sign up' containerElement={<Link to='/Signup' />}/>
                             <MenuItem name='Help' primaryText='Help' containerElement={<Link to='/Help'/>} />
                             <MenuItem name='Leaderboard' primaryText='Leaderboard' containerElement={<Link to='/Leaderboard'/>} />
@@ -46,9 +46,9 @@ class App extends Component {
                             : ''}
                           </IconMenu>}
                           />
-
+              <AlignmentForm />
            </div>
-           <AlignmentForm />
+           
          </MuiThemeProvider>
       </div>
     );

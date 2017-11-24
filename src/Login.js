@@ -7,45 +7,47 @@ import './App.css';
 
 class Login extends Component {
 constructor(props){
-  super(props);
-  this.state={
-  email:'',
-  password:'',
-  //isAuthenticated: this.props.location.props
-  }
- }
+    super(props);
+    this.state={
+    email:'',
+    password:'',
+    //isAuthenticated: this.props.location.props
+    }
+}
+
 
 handleClick(event){
- var apiBaseUrl = "http://192.168.0.4:4200/";
- var payload={
- "email":this.state.email,
- "password":this.state.password
- }
- console.log(payload);
- axios.post(apiBaseUrl+'login', payload)
- .then(function (response) {
- console.log(response);
- if(response.status === 200){
- console.log("Login successful");
- this.props.location.props = true;
- console.log(this.props.location.props);
- }
- else if(response.status === 204){
- console.log("Username password do not match");
- alert("username password do not match")
- }
- else{
- console.log("Username does not exists");
- alert("Username does not exist");
- }
- })
- .catch(function (error) {
- console.log(error);
- });
- }
+    var apiBaseUrl = "http://192.168.0.4:4200/";
+    var payload={
+        "email":this.state.email,
+        "password":this.state.password
+    }
+    console.log(payload);
+    
+    axios.post(apiBaseUrl+'login', payload)
+    .then((response) => {
+        console.log(response);
+        if(response.status === 200){
+            console.log("Login successful");
+            console.log(this.props);
+            this.props.location.props = true;
+            console.log(this.props.location.props);
+        }
+        else if(response.status === 204){
+        console.log("Username password do not match");
+        alert("username password do not match")
+        }
+        else{
+            console.log("Username does not exists");
+            alert("Username does not exist");
+        }
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+}
 
 render() {
-  console.log(this.props.location.props);
     return (
       <div className="Login">
         <MuiThemeProvider>
