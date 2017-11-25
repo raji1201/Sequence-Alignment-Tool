@@ -27,6 +27,7 @@ componentDidMount()
 	console.log(response);
 	if(response.status === 200){
 	console.log("Successful");
+  console.log(response);
 	const posts = response.data.map(obj => obj.data);
         this.setState({ posts });
 	}

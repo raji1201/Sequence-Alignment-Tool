@@ -11,7 +11,7 @@ constructor(props){
     this.state={
     email:'',
     password:'',
-    //isAuthenticated: this.props.location.props
+    id: ''
     }
 }
 
@@ -29,9 +29,13 @@ handleClick(event){
         console.log(response);
         if(response.status === 200){
             console.log("Login successful");
-            console.log(this.props);
-            this.props.location.props = true;
-            console.log(this.props.location.props);
+            var storage = window.localStorage;
+            storage.setItem('id', response.data._id);
+            this.setState({
+                id: storage.id
+            });  
+            console.log(storage.getItem('id'));
+            
         }
         else if(response.status === 204){
         console.log("Username password do not match");

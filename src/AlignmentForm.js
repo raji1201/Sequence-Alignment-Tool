@@ -15,10 +15,19 @@ export default class AlignmentForm extends Component {
 	    	database: '',
 	    	gap: '',
 	    	userScore: '',
-	    	alignment: ''
+	    	alignment: '',
+	    	id: ''
 	    };
 	}
 
+	componentWillMount() {
+    	var storage = window.localStorage;
+    	if (storage.id) {
+      		this.setState({
+        		id: storage.id
+      		});  
+    	}
+  	}
 	//SANITISE THE INPUT, specifically gap
 	handleSubmit(event) {
 		var apiBaseUrl = "http://192.168.0.4:4200/";
@@ -38,7 +47,8 @@ export default class AlignmentForm extends Component {
  			"database":this.state.database,
  			"gap": this.state.gap,
  			"userScore": this.state.userScore,
- 			"alignment": (this.state.alignment === 0) ? 'global' : 'local'
+ 			"alignment": (this.state.alignment === 0) ? 'global' : 'local',
+ 			"id": this.state.id
  		}
  		
  		axios.post(apiBaseUrl + 'alignment', payload)
