@@ -60,8 +60,8 @@ render() {
   }];
 
 return (
-  <ReactTable className="-highlight" defaultPageSize={10} style={styles} data={this.state.posts} columns={columns} />
+  <ReactTable className="-highlight" pageSize={10} showPagination={false} style={styles} data={this.state.posts} columns={columns} />
   );
-	}
+  }
 }
 export default Leaderboard;
