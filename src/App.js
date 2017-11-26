@@ -49,7 +49,8 @@ class App extends Component {
   var storage = window.localStorage;
   storage.removeItem('id');
   this.setState({
-        id: ''
+        id: '',
+        isVisible: true
       });
  }
  loggedin () {
@@ -93,7 +94,7 @@ class App extends Component {
               
                 <MenuItem name='Help' primaryText='Help' onClick={this.hideForm} containerElement={<Link to='/Help'/>} />
                 <MenuItem name='Leaderboard' onClick={this.hideForm} primaryText='Leaderboard' containerElement={<Link to='/Leaderboard'/>} />
-                <MenuItem name='Logout' primaryText='Logout' onClick={this.logOut} />
+                <MenuItem name='Logout' primaryText='Logout' onClick={this.logOut} containerElement={<Link to='/'/>}/>
               </IconMenu>           
             }
           />

@@ -28,7 +28,10 @@ componentDidMount()
 	if(response.status === 200){
 	console.log("Successful");
   console.log(response);
-	const posts = response.data.map(obj => obj.data);
+	const posts = response.data.map((obj) => {
+      var score = {'name': obj.data.fullName, 'score': obj.data.highScore}
+      return score;
+      });
         this.setState({ posts });
 	}
 	else if(response.status === 204){
@@ -46,11 +49,6 @@ componentDidMount()
 }
 
 render() {
-  const data = [{
-    name: 'ABC',
-    score: 26
-  }];
-
   const columns = [{
     Header: 'Name',
     accessor: 'name'
