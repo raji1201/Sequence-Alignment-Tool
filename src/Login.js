@@ -4,6 +4,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
 import './App.css';
+import { Redirect } from 'react-router';
 
 class Login extends Component {
 constructor(props){
@@ -11,12 +12,14 @@ constructor(props){
     this.state={
     email:'',
     password:'',
-    id: ''
+    id: '',
+    fireRedirect: false
     }
 }
 
 
 handleClick(event){
+    event.preventDefault()
     var apiBaseUrl = "http://192.168.0.4:4200/";
     var payload={
         "email":this.state.email,
@@ -33,7 +36,11 @@ handleClick(event){
             storage.setItem('id', response.data._id);
             this.setState({
                 id: storage.id
-            });  
+            }); 
+            console.log(this.state.id);
+            this.setState({
+                fireRedirect: true
+            });
             console.log(storage.getItem('id'));
             
         }
@@ -49,9 +56,12 @@ handleClick(event){
     .catch((error) => {
         console.log(error);
     });
+
 }
 
 render() {
+    const { from } = this.props.location.state || '/'
+    const { fireRedirect } = this.state
     return (
       <div className="Login">
         <MuiThemeProvider>
@@ -73,6 +83,9 @@ render() {
              <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
          </div>
          </MuiThemeProvider>
+         {fireRedirect && (
+          <Redirect to={from || '/'}/>
+        )}
       </div>
     );
   }

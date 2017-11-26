@@ -25,6 +25,7 @@ class App extends Component {
 }
   componentWillMount() {
     var storage = window.localStorage;
+    console.log('mount');
     if (storage.id) {
       this.setState({
         id: storage.id
@@ -54,6 +55,7 @@ class App extends Component {
       });
  }
  loggedin () {
+  console.log(this.state.id);
     if (!this.state.id) {
       return(
         <div>

@@ -23,16 +23,10 @@ componentDidMount()
 {
 	var apiBaseUrl = "http://192.168.0.4:4200/";
 	axios.get(apiBaseUrl+'leaderboard')
-	.then(function (response) {
-	console.log(response);
+	.then((response) => {
 	if(response.status === 200){
-	console.log("Successful");
-  console.log(response);
-	const posts = response.data.map((obj) => {
-      var score = {'name': obj.data.fullName, 'score': obj.data.highScore}
-      return score;
-      });
-        this.setState({ posts });
+    var scores = response.data;
+    this.setState({ posts: scores });
 	}
 	else if(response.status === 204){
 	console.log("ERROR");
@@ -43,7 +37,7 @@ componentDidMount()
 	alert("ERROR");
 	}
 	})
-	.catch(function (error) {
+	.catch((error) => {
 	console.log(error);
 	});
 }
@@ -51,10 +45,10 @@ componentDidMount()
 render() {
   const columns = [{
     Header: 'Name',
-    accessor: 'name'
+    accessor: 'fullName'
   }, {
     Header: 'Score',
-    accessor: 'score'
+    accessor: 'highScore'
   }];
 
 return (
