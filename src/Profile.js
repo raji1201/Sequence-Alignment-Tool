@@ -21,23 +21,24 @@ export default class Profile extends Component {
 		};
 	}
 
-	componentDidMount()
-	{
+	componentWillMount() {
 		var storage = window.localStorage;
-		console.log(storage);
 		if (storage.id) {
 			this.setState({
 				id: storage.id
 			});  
 		}
 
+		
+	}
+	componentDidMount()
+	{	
 		var payload = {
 			"userId" : this.state.id
 		};
-
 		console.log(payload);
 		var apiBaseUrl = "http://192.168.0.4:4200/";
-		axios.get(apiBaseUrl+'profile', payload)
+		axios.get(apiBaseUrl+`profile?userId=${this.state.id}`)
 		.then((response) => {
 		if(response.status === 200){
 			console.log(response);
