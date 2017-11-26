@@ -97,6 +97,7 @@ class App extends Component {
 								anchorOrigin={{horizontal: 'right', vertical: 'top'}}>
 							
 							<MenuItem name='Help' primaryText='Help' onClick={this.hideForm} containerElement={<Link to='/Help'/>} />
+							<MenuItem name='Profile' primaryText='Profile' onClick={this.hideForm} containerElement={<Link to='/Profile'/>} />
 							<MenuItem name='Leaderboard' onClick={this.hideForm} primaryText='Leaderboard' containerElement={<Link to='/Leaderboard'/>} />
 							<MenuItem name='Logout' primaryText='Logout' onClick={this.logOut} containerElement={<Link to='/'/>}/>
 							</IconMenu>           
