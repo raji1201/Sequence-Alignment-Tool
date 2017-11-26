@@ -5,20 +5,21 @@ import './App.css';
 import axios from 'axios';
 
 const styles = {
-		width: 400,
-		overflow: 'hidden',
-		margin: '20px auto 0'
-		};
+	width: 400,
+	overflow: 'hidden',
+	margin: '20px auto 0'
+};
 
 export default class Leaderboard extends Component {
 
 	constructor(props) {
-			super(props);
+		super(props);
 
-			this.state = {
-				posts: []
-			};
+		this.state = {
+			posts: []
+		};
 	}
+
 	componentDidMount()
 	{
 		var apiBaseUrl = "http://192.168.0.4:4200/";
@@ -29,16 +30,14 @@ export default class Leaderboard extends Component {
 			this.setState({ posts: scores });
 		}
 		else if(response.status === 204){
-		console.log("ERROR");
-		alert("ERROR");
+            alert("ERROR");
 		}
 		else{
-			console.log("ERROR");
-		alert("ERROR");
+			alert("ERROR");
 		}
 		})
 		.catch((error) => {
-		console.log(error);
+            console.log(error);
 		});
 	}
 

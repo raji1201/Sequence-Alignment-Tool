@@ -21,42 +21,49 @@ constructor(props){
 handleClick(event){
     event.preventDefault()
     var apiBaseUrl = "http://192.168.0.4:4200/";
-    var payload={
-        "email":this.state.email,
-        "password":this.state.password
-    }
-    console.log(payload);
-    
-    axios.post(apiBaseUrl+'login', payload)
-    .then((response) => {
-        console.log(response);
-        if(response.status === 200){
-            console.log("Login successful");
-            var storage = window.localStorage;
-            storage.setItem('id', response.data._id);
-            this.setState({
-                id: storage.id
-            }); 
-            console.log(this.state.id);
-            this.setState({
-                fireRedirect: true
-            });
-            console.log(storage.getItem('id'));
-            
-        }
-        else if(response.status === 204){
-        console.log("Username password do not match");
-        alert("username password do not match")
-        }
-        else{
-            console.log("Username does not exists");
-            alert("Username does not exist");
-        }
-    })
-    .catch((error) => {
-        console.log(error);
-    });
+    const regexForEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
+    if(this.state.email !== '' && this.state.password !== '')
+    {
+        if(regexForEmail.test(this.state.email))
+        {
+            var payload={
+                "email":this.state.email,
+                "password":this.state.password
+            }
+            console.log(payload);
+            
+            axios.post(apiBaseUrl+'login', payload)
+            .then((response) => {
+                console.log(response);
+                if(response.status === 200){
+                    var storage = window.localStorage;
+                    storage.setItem('id', response.data._id);
+                    this.setState({
+                        id: storage.id
+                    });
+                    this.setState({
+                        fireRedirect: true
+                    });
+                    
+                }
+                else if(response.status === 401){
+                    alert("Incorrect username and password!");
+                }
+                else{
+                    alert("Username does not exist");
+                }
+            })
+            .catch((error) => {
+                alert("Incorrect username and password!");
+                console.log(error);
+            });
+        }
+        else
+            alert('Incorrect email format!');
+    }
+    else
+        alert('Please fill all the fields!');
 }
 
 render() {
@@ -91,6 +98,6 @@ render() {
   }
 }
 const style = {
- margin: 15,
+    margin: 15,
 };
 export default Login;
