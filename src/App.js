@@ -11,112 +11,116 @@ import { Link } from 'react-router-dom'
 import FlatButton from 'material-ui/FlatButton';
 
 class App extends Component {
-  
-  constructor(props){
-  super(props);
-  this.state={
-     id: '',
-     isVisible: true
-  };
+	
+	constructor(props){
+	super(props);
+	this.state={
+		 id: '',
+		 isVisible: true
+	};
 
-  this.hideForm = this.hideForm.bind(this);
-  this.showForm = this.showForm.bind(this);
-  this.logOut = this.logOut.bind(this);
+	this.hideForm = this.hideForm.bind(this);
+	this.showForm = this.showForm.bind(this);
+	this.logOut = this.logOut.bind(this);
 }
-  componentWillMount() {
-    var storage = window.localStorage;
-    console.log('mount');
-    if (storage.id) {
-      this.setState({
-        id: storage.id
-      });  
-    }
-  }
- hideForm() {
-  this.setState({
-      isVisible: false
-  });
- }
+	componentWillReceiveProps() {
+		var storage = window.localStorage;
+		console.log('mount');
+		if (storage.id) {
+			this.setState({
+				id: storage.id,
+				isVisible : true
+			});  
+		}
+	}
+	
+	hideForm() {
+		this.setState({
+				isVisible: false
+		});
+	}
 
- showForm() {
-  var storage = window.localStorage;
-  this.setState({
-      isVisible: true,
-      id: storage.id
-  });
- }
+	showForm() {
+		var storage = window.localStorage;
+		this.setState({
+				isVisible: true,
+				id: storage.id
+		});
+	}
 
- logOut() {
-  var storage = window.localStorage;
-  storage.removeItem('id');
-  this.setState({
-        id: '',
-        isVisible: true
-      });
- }
- loggedin () {
-  console.log(this.state.id);
-    if (!this.state.id) {
-      return(
-        <div>
-          <AppBar title="SEQUENCE ALIGNMENT TOOL"
-            iconElementLeft={
-              <FlatButton label="Home" backgroundColor="white" onClick={this.showForm} containerElement={<Link to='/' />} />
-            }
-            iconElementRight={
-              <IconMenu iconButtonElement={<IconButton name='menu'><MoreVertIcon /></IconButton>}
-                targetOrigin={{horizontal: 'right', vertical: 'top'}}
-                anchorOrigin={{horizontal: 'right', vertical: 'top'}}>
-              
-                <MenuItem name='Login' primaryText='Login' onClick={this.hideForm} containerElement={<Link to={{ pathname:'/Login', props: this.state.isAuthenticated }} />}/>
-                <MenuItem name='Sign up' primaryText='Sign up' onClick={this.hideForm} containerElement={<Link to='/Signup' />}/>
-                <MenuItem name='Help' primaryText='Help' onClick={this.hideForm} containerElement={<Link to='/Help'/>} />
-                <MenuItem name='Leaderboard' onClick={this.hideForm} primaryText='Leaderboard' containerElement={<Link to='/Leaderboard'/>} />
-                
-              </IconMenu>           
-            }
-          />
-            
-            {this.state.isVisible ? <AlignmentForm /> : ''}
-          
-          </div>
-      );
-    }
-    else {
-      return(
-        <div>
-          <AppBar title="SEQUENCE ALIGNMENT TOOL"
-            iconElementLeft={
-              <FlatButton label="Home" backgroundColor="white" onClick={this.showForm} containerElement={<Link to='/' />} />
-            }
-            iconElementRight={
-              <IconMenu iconButtonElement={<IconButton name='menu'><MoreVertIcon /></IconButton>}
-                targetOrigin={{horizontal: 'right', vertical: 'top'}}
-                anchorOrigin={{horizontal: 'right', vertical: 'top'}}>
-              
-                <MenuItem name='Help' primaryText='Help' onClick={this.hideForm} containerElement={<Link to='/Help'/>} />
-                <MenuItem name='Leaderboard' onClick={this.hideForm} primaryText='Leaderboard' containerElement={<Link to='/Leaderboard'/>} />
-                <MenuItem name='Logout' primaryText='Logout' onClick={this.logOut} containerElement={<Link to='/'/>}/>
-              </IconMenu>           
-            }
-          />
-            
-            {this.state.isVisible ? <AlignmentForm /> : ''}
-          
-          </div>
-      );
-    }
-  }
-  render() {
-    console.log(this.state.id);
-    return (
-      <div className="App">
-        <MuiThemeProvider>
-          {this.loggedin()} 
-        </MuiThemeProvider>
-      </div>
-    );
-  }
+	logOut() {
+		var storage = window.localStorage;
+		storage.removeItem('id');
+		this.setState({
+					id: '',
+					isVisible: true
+				});
+	}
+
+ 	loggedin () {
+		console.log(this.state.id);
+		console.log(this.state.isVisible);
+		if (!this.state.id) {
+			return(
+				<div>
+					<AppBar title="SEQUENCE ALIGNMENT TOOL"
+						iconElementLeft={
+							<FlatButton label="Home" backgroundColor="white" onClick={this.showForm} containerElement={<Link to='/' />} />
+						}
+						iconElementRight={
+							<IconMenu iconButtonElement={<IconButton name='menu'><MoreVertIcon /></IconButton>}
+								targetOrigin={{horizontal: 'right', vertical: 'top'}}
+								anchorOrigin={{horizontal: 'right', vertical: 'top'}}>
+							
+								<MenuItem name='Login' primaryText='Login' onClick={this.hideForm} containerElement={<Link to={{ pathname:'/Login', props: this.state.isAuthenticated }} />}/>
+								<MenuItem name='Sign up' primaryText='Sign up' onClick={this.hideForm} containerElement={<Link to='/Signup' />}/>
+								<MenuItem name='Help' primaryText='Help' onClick={this.hideForm} containerElement={<Link to='/Help'/>} />
+								<MenuItem name='Leaderboard' onClick={this.hideForm} primaryText='Leaderboard' containerElement={<Link to='/Leaderboard'/>} />
+								
+							</IconMenu>           
+						}
+					/>
+						
+						{this.state.isVisible ? <AlignmentForm /> : ''}
+					
+					</div>
+			);
+		}
+		else {
+			return(
+				<div>
+					<AppBar title="SEQUENCE ALIGNMENT TOOL"
+						iconElementLeft={
+							<FlatButton label="Home" backgroundColor="white" onClick={this.showForm} containerElement={<Link to='/' />} />
+						}
+						iconElementRight={
+							<IconMenu iconButtonElement={<IconButton name='menu'><MoreVertIcon /></IconButton>}
+								targetOrigin={{horizontal: 'right', vertical: 'top'}}
+								anchorOrigin={{horizontal: 'right', vertical: 'top'}}>
+							
+								<MenuItem name='Help' primaryText='Help' onClick={this.hideForm} containerElement={<Link to='/Help'/>} />
+								<MenuItem name='Leaderboard' onClick={this.hideForm} primaryText='Leaderboard' containerElement={<Link to='/Leaderboard'/>} />
+								<MenuItem name='Logout' primaryText='Logout' onClick={this.logOut} containerElement={<Link to='/'/>}/>
+							</IconMenu>           
+						}
+					/>
+						
+						{this.state.isVisible ? <AlignmentForm /> : ''}
+					
+					</div>
+			);
+		}
+	}
+	render() {
+		console.log(this.state.id);
+		return (
+			<div className="App">
+				<MuiThemeProvider>
+					{this.loggedin()} 
+				</MuiThemeProvider>
+			</div>
+		);
+	}
 }
 
 export default App;

@@ -38,23 +38,25 @@ export default class AlignmentForm extends Component {
         	alert('Gap Penalty and Predicted Score has to be numeric values only!');
       	}
 
-      	if (!se.test(this.state.query) || !se.test(this.state.database)) {
+      	else if (!se.test(this.state.query) || !se.test(this.state.database)) {
         	alert('Query seq and Database seq can only contain A, C, G, T!');
       	}
-
-		var payload={
- 			"query":this.state.query,
- 			"database":this.state.database,
- 			"gap": this.state.gap,
- 			"userScore": this.state.userScore,
- 			"alignment": (this.state.alignment === 0) ? 'global' : 'local',
- 			"id": this.state.id
- 		}
- 		
- 		axios.post(apiBaseUrl + 'alignment', payload)
- 		.then(function (response) {
- 		//	console.log(response);
- 		})
+      	else {
+      		var payload={
+	 			"query":this.state.query,
+	 			"database":this.state.database,
+	 			"gap": this.state.gap,
+	 			"userScore": this.state.userScore,
+	 			"alignment": (this.state.alignment === 0) ? 'global' : 'local',
+	 			"id": this.state.id
+	 		}
+	 		
+	 		axios.post(apiBaseUrl + 'alignment', payload)
+	 		.then(function (response) {
+	 			console.log(response);
+	 		});	
+      	}
+		
 	}
 
 	render() {
