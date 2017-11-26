@@ -59,6 +59,7 @@ class App extends Component {
 	}
 
  	loggedin () {
+ 		const currentPath = window.location.pathname;
 		if (!this.state.id) {
 			return(
 				<div>
@@ -79,8 +80,7 @@ class App extends Component {
 							</IconMenu>           
 						}
 					/>
-					
-                    {this.state.isVisible ? <AlignmentForm /> : ''}
+					{(currentPath === '/') ? <AlignmentForm /> : null}
 				</div>
 			);
 		}
@@ -103,7 +103,7 @@ class App extends Component {
 						}
 					/>
 						
-					{this.state.isVisible ? <AlignmentForm /> : ''}
+					{(currentPath === '/') ? <AlignmentForm /> : null}
 				</div>
 			);
 		}
