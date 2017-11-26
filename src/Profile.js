@@ -5,7 +5,7 @@ import './App.css';
 import axios from 'axios';
 
 const styles = {
-	width: 400,
+	width: 1400,
 	overflow: 'hidden',
 	margin: '20px auto 0'
 };
@@ -42,7 +42,7 @@ export default class Profile extends Component {
 		.then((response) => {
 		if(response.status === 200){
 			console.log(response);
-			var scores = response.data.history;
+			var scores = response.data;
 			this.setState({ posts: scores });
 		}
 		else if(response.status === 204){
@@ -59,20 +59,29 @@ export default class Profile extends Component {
 
 	render() {
 		const columns = [{
-			Header: 'Query',
+			Header: 'Sequence 1',
 			accessor: 'query'
 		}, {
-			Header: 'Database',
+			Header: 'Sequence 2',
 			accessor: 'database'
+		}, {
+			Header: 'Alignment Type',
+			accessor: 'alignmentType'
+		}, {
+			Header: 'Seq 1 Alignment',
+			accessor: 'queryAlignment'
+		}, {
+			Header: 'Seq 2 Alignment',
+			accessor: 'databaseAlignment'
 		}, {
 			Header: 'Date',
 			accessor: 'date'
 		}, {
-			Header: 'Database Start',
-			accessor: 'databaseStart'
-		}, {
-			Header: 'Query Start',
+			Header: 'Seq 1 Start',
 			accessor: 'queryStart'
+		}, {
+			Header: 'Seq 2 Start',
+			accessor: 'databaseStart'
 		}, {
 			Header: 'Alignment Score',
 			accessor: 'score'
@@ -82,7 +91,7 @@ export default class Profile extends Component {
 		}];
 
 	return (
-		<ReactTable className="-highlight" pageSize={10} showPagination={false} style={styles} data={this.state.posts} columns={columns} />
+		<ReactTable className="-highlight" pageSize={10} showPagination={true} style={styles} data={this.state.posts} columns={columns} />
 		);
 	}
 }
