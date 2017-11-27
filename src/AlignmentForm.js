@@ -5,6 +5,7 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import axios from 'axios';
 import MenuItem from 'material-ui/MenuItem';
+import AlignmentMatrix from './matrix/AlignmentMatrix';
 
 export default class AlignmentForm extends Component {
 
@@ -16,7 +17,9 @@ export default class AlignmentForm extends Component {
 	    	gap: '',
 	    	userScore: '',
 	    	alignment: '',
-	    	id: ''
+	    	id: '',
+	    	showMatrix: false,
+	    	props: {}
 	    };
 	}
 
@@ -52,55 +55,71 @@ export default class AlignmentForm extends Component {
 	 		}
 	 		
 	 		axios.post(apiBaseUrl + 'alignment', payload)
-	 		.then(function (response) {
-	 			console.log(response);
+	 		.then((response) => {
+	 			this.showMatrix(response);
 	 		});	
       	}
 		
 	}
 
+	showMatrix(response) {
+		if (response.status === 200) {
+
+			this.setState ({
+				showMatrix: true,
+				props: response.data
+			});	
+		}
+
+		else return null;
+	}
+
 	render() {
 	  	return (
-			<div className="AlignmentForm">
-		  		<MuiThemeProvider>
-		  		<div>
-		  			<TextField
-		  				hintText="Enter first string for alignment"
-		  				floatingLabelText="Query"
-		  				onChange = {(event,newValue) => this.setState({query:newValue})}
-		  			/>
-		  			<br />
-		  			<TextField
-		  				hintText="Enter second string for alignment"
-		  				floatingLabelText="Database"
-		  				onChange = {(event,newValue) => this.setState({database:newValue})}
-		  			/>
-		  			<br />
-		  			<TextField
-		  				hintText="Enter gap penalty"
-		  				floatingLabelText="Gap"
-		  				onChange = {(event,newValue) => this.setState({gap:newValue})}
-		  			/>
-		  			<br />
-		  			<TextField
-		  				hintText="Enter predicted score"
-		  				floatingLabelText="User Score"
-		  				onChange = {(event,newValue) => this.setState({userScore:newValue})}
-		  			/>
-		  			<br />
-		  			<br />
-		  			<SelectField hintText="Alignment type"
-		  				floatingLabelFixed={true}
-		  				value={this.state.alignment}
-		  				onChange = {(event,newValue) => this.setState({alignment:newValue})}>
-        				<MenuItem value={0} label="Global" primaryText="Global" />
-				        <MenuItem value={1} label="Local" primaryText="Local" />
-				    </SelectField>
-		  			<br />
-		  			<br />
-		  			<RaisedButton label="Submit" primary={true} onClick={(event) => this.handleSubmit(event)}/>
-		  			</div>
-		  		</MuiThemeProvider>
+	  		<div>
+				<div className="AlignmentForm">
+			  		<MuiThemeProvider>
+			  		<div>
+			  			<TextField
+			  				hintText="Enter first string for alignment"
+			  				floatingLabelText="Query"
+			  				onChange = {(event,newValue) => this.setState({query:newValue})}
+			  			/>
+			  			<br />
+			  			<TextField
+			  				hintText="Enter second string for alignment"
+			  				floatingLabelText="Database"
+			  				onChange = {(event,newValue) => this.setState({database:newValue})}
+			  			/>
+			  			<br />
+			  			<TextField
+			  				hintText="Enter gap penalty"
+			  				floatingLabelText="Gap"
+			  				onChange = {(event,newValue) => this.setState({gap:newValue})}
+			  			/>
+			  			<br />
+			  			<TextField
+			  				hintText="Enter predicted score"
+			  				floatingLabelText="User Score"
+			  				onChange = {(event,newValue) => this.setState({userScore:newValue})}
+			  			/>
+			  			<br />
+			  			<br />
+			  			<SelectField hintText="Alignment type"
+			  				floatingLabelFixed={true}
+			  				value={this.state.alignment}
+			  				onChange = {(event,newValue) => this.setState({alignment:newValue})}>
+	        				<MenuItem value={0} label="Global" primaryText="Global" />
+					        <MenuItem value={1} label="Local" primaryText="Local" />
+					    </SelectField>
+			  			<br />
+			  			<br />
+			  			<RaisedButton label="Submit" primary={true} onClick={(event) => this.handleSubmit(event)}/>
+			  			</div>
+			  		</MuiThemeProvider>
+				</div>
+
+				{(this.state.showMatrix) ? <AlignmentMatrix data={this.state.props}/> : null}
 			</div>
 	  	);
 	}
