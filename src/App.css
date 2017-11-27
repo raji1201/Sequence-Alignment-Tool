@@ -2,6 +2,22 @@
   text-align: center;
 }
 
+.Login {
+  text-align: center;
+}
+
+.Register {
+  text-align: center;
+}
+
+.Help {
+  text-align: justify;
+  color: #00BCD4;
+  margin-left: 100px;
+  margin-right: 100px;
+  margin-top: 50px;
+}
+
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
@@ -25,12 +41,4 @@
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
-}
-
-.Login {
-  padding-left: 50px;
-}
-
-.Register {
-  padding-left: 100px;
 }

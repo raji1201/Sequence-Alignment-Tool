@@ -5,62 +5,53 @@ import './App.css';
 import axios from 'axios';
 
 const styles = {
-    width: 400,
-    overflow: 'hidden',
-    margin: '20px auto 0'
-    };
+	width: 400,
+	overflow: 'hidden',
+	margin: '20px auto 0'
+};
 
-class Leaderboard extends Component {
+export default class Leaderboard extends Component {
 
-constructor(props) {
-    super(props);
+	constructor(props) {
+		super(props);
 
-    this.state = {
-      posts: []
-    };
-}
-componentDidMount()
-{
-	var apiBaseUrl = "http://192.168.0.4:4200/";
-	axios.get(apiBaseUrl+'leaderboard')
-	.then(function (response) {
-	console.log(response);
-	if(response.status == 200){
-	console.log("Successful");
-	const posts = response.data.map(obj => obj.data);
-        this.setState({ posts });
+		this.state = {
+			posts: []
+		};
 	}
-	else if(response.status == 204){
-	console.log("ERROR");
-	alert("ERROR");
+
+	componentDidMount()
+	{
+		var apiBaseUrl = "http://192.168.0.4:4200/";
+		axios.get(apiBaseUrl+'leaderboard')
+		.then((response) => {
+		if(response.status === 200){
+			var scores = response.data;
+			this.setState({ posts: scores });
+		}
+		else if(response.status === 204){
+            alert("ERROR");
+		}
+		else{
+			alert("ERROR");
+		}
+		})
+		.catch((error) => {
+            console.log(error);
+		});
 	}
-	else{
-		console.log("ERROR");
-	alert("ERROR");
-	}
-	})
-	.catch(function (error) {
-	console.log(error);
-	});
-}
 
-render() {
-  const data = [{
-    name: 'ABC',
-    score: 26
-  }];
+	render() {
+		const columns = [{
+			Header: 'Name',
+			accessor: 'fullName'
+		}, {
+			Header: 'Score',
+			accessor: 'highScore'
+		}];
 
-  const columns = [{
-    Header: 'Name',
-    accessor: 'name'
-  }, {
-    Header: 'Score',
-    accessor: 'score'
-  }];
-
-return (
-  <ReactTable className="-highlight" defaultPageSize={10} style={styles} data={this.state.posts} columns={columns} />
-  );
+	return (
+		<ReactTable className="-highlight" pageSize={10} showPagination={false} style={styles} data={this.state.posts} columns={columns} />
+		);
 	}
 }
-export default Leaderboard;
