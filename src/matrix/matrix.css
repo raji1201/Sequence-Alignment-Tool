@@ -53,4 +53,9 @@ body {
   	align-self: center;
   	padding: 5px;
   }
+
+  .hidden {
+    display:none;
+  }
+  
   
