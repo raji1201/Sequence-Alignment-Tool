@@ -7,39 +7,70 @@ class AlignmentMatrix extends React.Component {
     
     constructor(props) {
             super(props);
+            
+            //Solution matrix that we obtained from the backend
+            this.solutionMatrix = props.data.matrix;
+
+            //This is the matrix for display on the UI
             this.matrix = undefined;
+            this.prepareMatrix();
+
+            //This matrix holds the values that use has entered in the "game" mode
+            this.userMatrix = this.initializeInputMatrix();
+            
             this.state = {
-                color : "white"
+                mode : props.data.mode
+            };
+    }
+
+    initializeInputMatrix() {
+        var inputMatrix = [];
+        for(var i = 0 ; i < this.matrix.length; i++){
+            var row = [];
+            for(var j = 0 ; j < this.matrix[0].length; j++){
+                row.push(0);
             }
+            inputMatrix.push(row);
+        }
+
+        return inputMatrix;
+    }
+
+    verifySolution(){
+        var i = 0;
+        var failed = false;
+        var userMatrix = this.userMatrix;
+        var row;
+        /*
+        //Create a new object
+        var matrixSpliced = [];
+        for(i = 0; i < userMatrix.length; i++){
+            row = userMatrix[i].slice();
+
+            row.splice(0,1);
+            matrixSpliced.push(row);
+        }
+
+        //Remove the first row
+        matrixSpliced.splice(0,1);
+        */
+
+        //Check for correctness
+        for(i = 1 ; i < this.solutionMatrix.length; i++){
+            for(var j = 1 ; j < this.solutionMatrix[0].length; j++){
+                if(this.solutionMatrix[i][j] !== userMatrix[i][j]){
+                    failed = true;
+                }
+            }
+        }
+
+        return failed;
     }
     
     prepareMatrix() {
     		console.log(this.props.data);
     		var response = this.props.data;
-            /*const SPACE =  " ";
-            const EMPTY = "";
-    
-            const databaseSeq = "ACGT";
-            const querySeq = "ACGT";
-            this.matrix = [];
-    
-            var dbSequenceRow = databaseSeq.split(EMPTY);
-            dbSequenceRow.unshift(SPACE);
-    		
-
-
-            var querySequenceColumn = querySeq.split(EMPTY);
-            querySequenceColumn = querySequenceColumn.unshift(SPACE);
-    
-            for(var i = 0 ; i < response.matrix.length; i++){
-                this.matrix.push(response.matrix[i]);
-            }
-    
-            for(i = 0 ; i < querySequenceColumn.length; i++){
-                this.matrix[i].unshift(querySequenceColumn[i].unshift(SPACE));
-            }
-    
-            this.matrix.unshift(dbSequenceRow);*/
+           
 
             const query = response.query;
             const database = response.database;
@@ -49,9 +80,9 @@ class AlignmentMatrix extends React.Component {
             
             this.matrix = this.initializeMatrix(query, database, alignmentType, gap, matrixValues);
 
-        }
+    }
 
-	    initializeMatrix (query, database, alignmentType, gap, matrixValues)  {
+	initializeMatrix(query, database, alignmentType, gap, matrixValues) {
 	    	var matrix = matrixValues;
 
 	    	var queryColumn = query.split("");
@@ -67,32 +98,89 @@ class AlignmentMatrix extends React.Component {
 	    	}
 
 	    	return matrix;
+    }
+
+    isElementHidden(rowIndex, columnIndex, element) {
+        if(this.props.data.mode === "demo"){
+            if( rowIndex === 0 || columnIndex === 0 || 
+                rowIndex === 1 || columnIndex === 1 ||
+                isNaN(element) || element === " "){
+                return false;
+            }else {
+                return true;
+            }
+        }else if(this.props.data.mode === "game"){
+            if( rowIndex === 0 || columnIndex === 0 ||
+                isNaN(element) || element === " "){
+                return false;
+            }else {
+                return true;
+            }
         }
+    }
+
+    handleSubmit(){
+        var failed = this.verifySolution();
+        alert('Did you pass ? : ' + !failed);
+    }
+
+    onCellValueChange(cell) {
+        var inputMatrix = this.userMatrix;
+        inputMatrix[cell.rowIndex][cell.columnIndex] = cell.value;
+    }
     
-        renderSquare(val) {
-            return <Square data={val} />;
-        }
+    render(){
     
-        render(){
-    
-            this.prepareMatrix();
-            
-    
-            return (
+        let mode = this.props.data.mode;
+        let rowIndex;
+        let columnIndex;
+        let getHiddenStatus = this.isElementHidden.bind(this);
+        let onChangeHandler = this.onCellValueChange.bind(this);
+
+        return (
+                <div>
                     <div className="alignment-matrix">
                     {    
                         this.matrix.map(function(row, i){
+                            rowIndex = i;
                             return <div className="board-row"> 
                                         { 
-                                            row.map(function(element,i){
-                                                return <Square data={element} />
+                                            row.map(function(element,j){
+                                                columnIndex = j;
+                                                var cell;
+                                                if(mode === "demo"){
+                                                    cell = {
+                                                            value: element,
+                                                            hidden: getHiddenStatus(rowIndex, columnIndex, element),
+                                                            mode: mode,
+                                                            rowIndex: rowIndex,
+                                                            columnIndex: columnIndex
+                                                    };
+                                                }else {
+                                                    cell = {
+                                                            value: element,
+                                                            isInput: getHiddenStatus(rowIndex, columnIndex, element),
+                                                            mode: mode,
+                                                            rowIndex: rowIndex,
+                                                            columnIndex: columnIndex
+                                                    };
+                                                }
+                                                
+                                                return <Square data={cell} handleChange={onChangeHandler}/>
                                             }) 
                                         }
                                     </div>
                         })
                     }
                     </div>
-                );
+                    <div className={this.state.mode === "demo" ? "hidden" : ""}>
+                        <button onClick={this.handleSubmit.bind(this)}>
+                            Submit!
+                        </button>
+                    </div>
+
+                </div>
+            );
     }
 }
 
