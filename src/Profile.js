@@ -58,7 +58,12 @@ export default class Profile extends Component {
 	}
 
 	render() {
-		const columns = [{
+		const columns = [
+		{
+			Header: 'Mode',
+			accessor: 'mode'
+		},
+		{
 			Header: 'Sequence 1',
 			accessor: 'query'
 		}, {

@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Square from './Square';
+import axios from 'axios';
 import './matrix.css';
 
 class AlignmentMatrix extends React.Component {
@@ -120,8 +121,18 @@ class AlignmentMatrix extends React.Component {
     }
 
     handleSubmit(){
+        const apiBaseUrl = "http://192.168.0.4:4200/";
+        var payload = this.props.data;
+
+        //ADD USER SCORE HERE
+        payload.userScore = 50;
+        console.log(payload);
         var failed = this.verifySolution();
-        alert('Did you pass ? : ' + !failed);
+
+        axios.post(apiBaseUrl + 'updateGameScore', payload)
+            .then((response) => {
+                console.log(response.status);
+            }); 
     }
 
     onCellValueChange(cell) {

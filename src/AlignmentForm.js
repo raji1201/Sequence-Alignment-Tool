@@ -19,7 +19,8 @@ export default class AlignmentForm extends Component {
 	    	alignment: '',
 	    	id: '',
 	    	showMatrix: false,
-	    	props: {}
+	    	props: {},
+	    	mode: ''
 	    };
 	}
 
@@ -37,8 +38,8 @@ export default class AlignmentForm extends Component {
 		const re = /^(\+|-)?\d+$/;
 		const se = /^[AaCcGgTt]+$/;
 		
-		if (!re.test(this.state.gap) || !re.test(this.state.userScore)) {
-        	alert('Gap Penalty and Predicted Score has to be numeric values only!');
+		if (!re.test(this.state.gap)) {
+        	alert('Gap Penalty has to be numeric values only!');
       	}
 
       	else if (!se.test(this.state.query) || !se.test(this.state.database)) {
@@ -51,8 +52,16 @@ export default class AlignmentForm extends Component {
 	 			"gap": this.state.gap,
 	 			"userScore": this.state.userScore,
 	 			"alignment": (this.state.alignment === 0) ? 'global' : 'local',
-	 			"id": this.state.id
+	 			"id": this.state.id,
 	 		}
+
+	 		if (this.state.mode === 0) {
+	 			payload.mode = "result";
+	 		} else if (this.state.mode === 1) {
+	 			payload.mode = "demo";
+	 		} else if (this.state.mode === 2) {
+	 			payload.mode = "game";
+	 		} 
 	 		
 	 		axios.post(apiBaseUrl + 'alignment', payload)
 	 		.then((response) => {
@@ -64,7 +73,17 @@ export default class AlignmentForm extends Component {
 
 	showMatrix(response) {
 		if (response.status === 200) {
+			
+			if (this.state.mode === 0) {
+	 			response.data.mode = "result";
+	 		} else if (this.state.mode === 1) {
+	 			response.data.mode = "demo";
+	 		} else if (this.state.mode === 2) {
+	 			response.data.mode = "game";
+	 		}
 
+	 		response.data.id = this.state.id;
+	 		
 			this.setState ({
 				showMatrix: true,
 				props: response.data
@@ -98,11 +117,15 @@ export default class AlignmentForm extends Component {
 			  				onChange = {(event,newValue) => this.setState({gap:newValue})}
 			  			/>
 			  			<br />
-			  			<TextField
-			  				hintText="Enter predicted score"
-			  				floatingLabelText="User Score"
-			  				onChange = {(event,newValue) => this.setState({userScore:newValue})}
-			  			/>
+			  			<br />
+			  			<SelectField hintText="Mode"
+			  				floatingLabelFixed={true}
+			  				value={this.state.mode}
+			  				onChange = {(event,newValue) => this.setState({mode:newValue})}>
+	        				<MenuItem value={0} label="Result" primaryText="Result" />
+					        <MenuItem value={1} label="Demo" primaryText="Demo" />
+					        <MenuItem value={2} label="Game" primaryText="Game" />					        
+					    </SelectField>
 			  			<br />
 			  			<br />
 			  			<SelectField hintText="Alignment type"
