@@ -107,10 +107,10 @@ class AlignmentMatrix extends React.Component {
                 rowIndex === 1 || columnIndex === 1 ||
                 isNaN(element) || element === " "){
                 return false;
-            }else {
+            } else {
                 return true;
             }
-        }else if(this.props.data.mode === "game"){
+        } else if(this.props.data.mode === "game"){
             if( rowIndex === 0 || columnIndex === 0 ||
                 isNaN(element) || element === " "){
                 return false;
@@ -167,7 +167,14 @@ class AlignmentMatrix extends React.Component {
                                                             rowIndex: rowIndex,
                                                             columnIndex: columnIndex
                                                     };
-                                                }else {
+                                                } else if (mode === "result") {
+                                                    cell = {
+                                                        value: element,
+                                                        mode: mode,
+                                                        rowIndex: rowIndex,
+                                                        columnIndex: columnIndex
+                                                    }
+                                                } else {
                                                     cell = {
                                                             value: element,
                                                             isInput: getHiddenStatus(rowIndex, columnIndex, element),
@@ -184,7 +191,7 @@ class AlignmentMatrix extends React.Component {
                         })
                     }
                     </div>
-                    <div className={this.state.mode === "demo" ? "hidden" : ""}>
+                    <div className={(this.state.mode === "demo" || "result") ? "hidden" : ""}>
                         <button onClick={this.handleSubmit.bind(this)}>
                             Submit!
                         </button>

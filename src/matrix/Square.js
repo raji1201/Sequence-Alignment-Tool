@@ -76,11 +76,21 @@ class Square extends React.Component {
         }
     }
 
+    renderResultModeSquare() {
+        return (
+            <div className="square" key={this.props.uniqueKey}>
+                {this.props.data.value} 
+            </div>
+        );
+    }
+
     render() {
         if(this.props.data.mode === "demo"){
             return this.renderDemoModeSquare();
-        }else if(this.props.data.mode === "game"){
+        } else if(this.props.data.mode === "game"){
             return this.renderGameModeSquare();
+        } else if (this.props.data.mode === "result") {
+            return this.renderResultModeSquare();
         }
     }
 }
