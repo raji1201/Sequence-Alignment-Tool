@@ -25,13 +25,18 @@ class AlignmentMatrix extends React.Component {
     }
 
     initializeInputMatrix() {
-        var inputMatrix = [];
+        /*var inputMatrix = [];
         for(var i = 0 ; i < this.matrix.length; i++){
             var row = [];
             for(var j = 0 ; j < this.matrix[0].length; j++){
                 row.push(0);
             }
             inputMatrix.push(row);
+        }*/
+
+        var inputMatrix = new Array(this.matrix.length);
+        for (let i = 0; i < this.matrix.length; i++) {
+            inputMatrix[i] = new Array(this.matrix[0].length);
         }
 
         return inputMatrix;
@@ -42,6 +47,9 @@ class AlignmentMatrix extends React.Component {
         var failed = false;
         var userMatrix = this.userMatrix;
         var row;
+        var incorrectUserValues = 0;
+        var incorrectValueDataArray = [];
+        var userScore = 0;
         /*
         //Create a new object
         var matrixSpliced = [];
@@ -55,17 +63,32 @@ class AlignmentMatrix extends React.Component {
         //Remove the first row
         matrixSpliced.splice(0,1);
         */
-
+        console.log(this.solutionMatrix);
+        console.log(userMatrix);
         //Check for correctness
         for(i = 1 ; i < this.solutionMatrix.length; i++){
             for(var j = 1 ; j < this.solutionMatrix[0].length; j++){
                 if(this.solutionMatrix[i][j] !== userMatrix[i][j]){
                     failed = true;
+                    incorrectUserValues++;
+                    let incorrectValueData = {
+                        row: i,
+                        column: j,
+                        correcValue: this.solutionMatrix[i][j],
+                        incorrectValue: userMatrix[i][j]
+                    };
+                    incorrectValueDataArray.push(incorrectValueData);
                 }
             }
         }
-
-        return failed;
+        console.log(incorrectUserValues);
+        userScore = 100 - (incorrectUserValues * 100 / ((userMatrix.length - 1) * (userMatrix[0].length - 1)));
+        var result = {
+            userScore: userScore,
+            incorrectValueDataArray: incorrectValueDataArray
+        };
+        console.log(result);
+        return result;
     }
     
     prepareMatrix() {
@@ -125,10 +148,11 @@ class AlignmentMatrix extends React.Component {
         var payload = this.props.data;
 
         //ADD USER SCORE HERE
-        payload.userScore = 50;
-        console.log(payload);
-        var failed = this.verifySolution();
-
+        var verifySolutionResult = this.verifySolution();
+        payload.userScore = verifySolutionResult.userScore;
+        console.log(verifySolutionResult);
+        //var failed = this.verifySolution();
+        alert(`User Score = ${payload.userScore}`);
         axios.post(apiBaseUrl + 'updateGameScore', payload)
             .then((response) => {
                 console.log(response.status);
@@ -136,6 +160,10 @@ class AlignmentMatrix extends React.Component {
     }
 
     onCellValueChange(cell) {
+        if (isNaN(cell.value)) {
+            alert(`Please enter a number at row: ${cell.rowIndex + 1} and column ${cell.columnIndex + 1}`);
+            return;
+        }
         var inputMatrix = this.userMatrix;
         inputMatrix[cell.rowIndex][cell.columnIndex] = cell.value;
     }
@@ -161,11 +189,11 @@ class AlignmentMatrix extends React.Component {
                                                 var cell;
                                                 if(mode === "demo"){
                                                     cell = {
-                                                            value: element,
-                                                            hidden: getHiddenStatus(rowIndex, columnIndex, element),
-                                                            mode: mode,
-                                                            rowIndex: rowIndex,
-                                                            columnIndex: columnIndex
+                                                        value: element,
+                                                        hidden: getHiddenStatus(rowIndex, columnIndex, element),
+                                                        mode: mode,
+                                                        rowIndex: rowIndex,
+                                                        columnIndex: columnIndex
                                                     };
                                                 } else if (mode === "result") {
                                                     cell = {
@@ -176,11 +204,11 @@ class AlignmentMatrix extends React.Component {
                                                     }
                                                 } else {
                                                     cell = {
-                                                            value: element,
-                                                            isInput: getHiddenStatus(rowIndex, columnIndex, element),
-                                                            mode: mode,
-                                                            rowIndex: rowIndex,
-                                                            columnIndex: columnIndex
+                                                        value: element,
+                                                        isInput: getHiddenStatus(rowIndex, columnIndex, element),
+                                                        mode: mode,
+                                                        rowIndex: rowIndex,
+                                                        columnIndex: columnIndex
                                                     };
                                                 }
                                                 
@@ -191,7 +219,7 @@ class AlignmentMatrix extends React.Component {
                         })
                     }
                     </div>
-                    <div className={(this.state.mode === "demo" || "result") ? "hidden" : ""}>
+                    <div className={(this.state.mode === "demo" || this.state.mode === "result") ? "hidden" : ""}>
                         <button onClick={this.handleSubmit.bind(this)}>
                             Submit!
                         </button>
