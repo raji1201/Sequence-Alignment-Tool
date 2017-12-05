@@ -1,6 +1,10 @@
 body {
     font: 14px "Century Gothic", Futura, sans-serif;
   }
+
+  .res {
+    font: 20px "sans-serif", Futura, sans-serif;
+  }
   
   ol, ul {
     padding-left: 30px;

@@ -3,6 +3,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import Square from './Square';
 import axios from 'axios';
+import TextField from 'material-ui/TextField';
 import './matrix.css';
 
 class AlignmentMatrix extends React.Component {
@@ -25,7 +26,9 @@ class AlignmentMatrix extends React.Component {
             this.state = {
                 mode : props.data.mode,
                 showResultMatrix: false,
-                incorrectValueSet: undefined
+                incorrectValueSet: undefined,
+                gameAlignedQuery: '',
+                gameAlignedDB: ''
             };
     }
 
@@ -272,6 +275,8 @@ class AlignmentMatrix extends React.Component {
 
             let fetchDirectionValue = this.getDirectionValue.bind(this);
             let incorrectValueSet = this.checkIncorrectValue.bind(this);
+            let score = this.props.data.score;
+            let userScore = this.props.data.userScore;
 
             return (<div className={(this.state.showResultMatrix) ? "" : "hidden"}>
                         <div className="alignment-matrix">
@@ -301,12 +306,34 @@ class AlignmentMatrix extends React.Component {
                                 })
                             }
                             </div>
+                            <br />
+                            <div className="res">
+                                Score : {score}<br />
+                                User Score : {userScore}<br />
+                                Query Alignment : {this.gameAlignedQuery}<br />
+                                Database Alignment : {this.gameAlignedDB}
+                            </div>
                     </div>);
         }
     }
     render(){
     
         let mode = this.props.data.mode;
+        let alignedDatabase;
+        let alignedQuery;
+        let score;
+        if(this.props.data.mode === "result")
+        {
+            alignedDatabase = this.props.data.alignedDatabase.toUpperCase();
+            alignedQuery = this.props.data.alignedQuery.toUpperCase();
+            score = this.props.data.score;
+        }
+
+        if(this.props.data.mode === "game")
+        {
+            this.gameAlignedQuery = this.props.data.alignedQuery.toUpperCase();
+            this.gameAlignedDB = this.props.data.alignedDatabase.toUpperCase();   
+        }
         let rowIndex;
         let columnIndex;
         let getHiddenStatus = this.isElementHidden.bind(this);
@@ -359,18 +386,20 @@ class AlignmentMatrix extends React.Component {
                         })
                     }
                     </div>
-
+                    <br />
+                    <div className="res">
+                        {(this.state.mode === "result") ? "Score : " + score: ""}<br />
+                        {(this.state.mode === "result") ? "Query Alignment : " + alignedQuery: ""}<br />
+                        {(this.state.mode === "result") ? "Database Alignment : " + alignedDatabase: ""}
+                    </div>
+                    <div className={(this.state.mode === "demo" || this.state.mode === "result") ? "hidden" : ""}>
+                        <RaisedButton onClick={this.handleSubmit.bind(this)} label = "Check Correctness" primary={true} />
+                    </div>
                     <br />
                     <br />
-
-                    <MuiThemeProvider>
-                        <div className={(this.state.mode === "demo" || this.state.mode === "result") ? "hidden" : ""}>
-                            <RaisedButton onClick={this.handleSubmit.bind(this)} label = "Check Correctness" primary={true} />
-                        </div>
-                    </MuiThemeProvider>
-
                     {this.unhideResultMatrix()}
-
+                    <br />
+                    <br />
                 </div>
             );
     }
