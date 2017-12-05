@@ -18,6 +18,8 @@ class AlignmentMatrix extends React.Component {
 
             //This matrix holds the values that use has entered in the "game" mode
             this.userMatrix = this.initializeInputMatrix();
+
+            this.directionCells = this.getDirectionCells();
             
             this.state = {
                 mode : props.data.mode
@@ -167,6 +169,53 @@ class AlignmentMatrix extends React.Component {
         var inputMatrix = this.userMatrix;
         inputMatrix[cell.rowIndex][cell.columnIndex] = cell.value;
     }
+
+    getDirectionCells() {
+        var cells = [];
+        let directionRowIndexStart = this.props.data.startOfDirectionString.row + 1;
+        let directionColumnIndexStart = this.props.data.startOfDirectionString.column + 1;
+        let directionValues = this.props.data.directionString.split("");
+
+        for(var i = 0 ; i < directionValues.length;i++){
+
+            var cell = {
+                row:directionRowIndexStart,
+                column: directionColumnIndexStart,
+                direction: undefined
+            };
+            var direction = undefined;
+            var directionCode = directionValues[i];
+            if(directionCode === "d"){
+                cell.direction = 8598;
+                directionRowIndexStart--;
+                directionColumnIndexStart--;
+            }else if(directionCode === "u"){
+                cell.direction = 8593;
+                directionRowIndexStart--;
+            }else if(directionCode === "l"){
+                cell.direction = 8592;
+                directionColumnIndexStart--;
+            }
+            cells.push(cell);
+        }
+
+        return cells;
+    }
+
+    getDirectionValue(row, column) {
+        var cells = this.directionCells;
+        var direction = undefined;
+        for(var i = 0; i < cells.length; i++){
+            var cellRow = cells[i].row;
+            var cellColumn = cells[i].column;
+
+            if(cellRow === row && cellColumn === column){
+                direction = cells[i].direction;
+            }
+        }
+
+        return direction;
+    }
     
     render(){
     
@@ -175,6 +224,8 @@ class AlignmentMatrix extends React.Component {
         let columnIndex;
         let getHiddenStatus = this.isElementHidden.bind(this);
         let onChangeHandler = this.onCellValueChange.bind(this);
+
+        let fetchDirectionValue = this.getDirectionValue.bind(this);
 
         return (
                 <div>
@@ -196,11 +247,13 @@ class AlignmentMatrix extends React.Component {
                                                         columnIndex: columnIndex
                                                     };
                                                 } else if (mode === "result") {
+                                                    var directionValue = fetchDirectionValue(rowIndex, columnIndex);
                                                     cell = {
                                                         value: element,
                                                         mode: mode,
                                                         rowIndex: rowIndex,
-                                                        columnIndex: columnIndex
+                                                        columnIndex: columnIndex,
+                                                        direction: directionValue
                                                     }
                                                 } else {
                                                     cell = {
