@@ -1,6 +1,5 @@
 body {
     font: 14px "Century Gothic", Futura, sans-serif;
-    margin: 20px;
   }
   
   ol, ul {
@@ -52,6 +51,8 @@ body {
   .alignment-matrix {
   	align-self: center;
   	padding: 5px;
+    margin-left: 500px;
+    width: 1400px;
   }
 
   .hidden {

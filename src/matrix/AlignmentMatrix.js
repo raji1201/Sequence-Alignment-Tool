@@ -1,5 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import RaisedButton from 'material-ui/RaisedButton';
 import Square from './Square';
 import axios from 'axios';
 import './matrix.css';
@@ -22,7 +23,9 @@ class AlignmentMatrix extends React.Component {
             this.directionCells = this.getDirectionCells();
             
             this.state = {
-                mode : props.data.mode
+                mode : props.data.mode,
+                showResultMatrix: false,
+                incorrectValueSet: undefined
             };
     }
 
@@ -46,32 +49,19 @@ class AlignmentMatrix extends React.Component {
 
     verifySolution(){
         var i = 0;
-        var failed = false;
+        //var failed = false;
         var userMatrix = this.userMatrix;
-        var row;
         var incorrectUserValues = 0;
         var incorrectValueDataArray = [];
+        var incorrectValueSet = new Set();
         var userScore = 0;
-        /*
-        //Create a new object
-        var matrixSpliced = [];
-        for(i = 0; i < userMatrix.length; i++){
-            row = userMatrix[i].slice();
-
-            row.splice(0,1);
-            matrixSpliced.push(row);
-        }
-
-        //Remove the first row
-        matrixSpliced.splice(0,1);
-        */
+        
         console.log(this.solutionMatrix);
         console.log(userMatrix);
         //Check for correctness
         for(i = 1 ; i < this.solutionMatrix.length; i++){
             for(var j = 1 ; j < this.solutionMatrix[0].length; j++){
                 if(this.solutionMatrix[i][j] !== userMatrix[i][j]){
-                    failed = true;
                     incorrectUserValues++;
                     let incorrectValueData = {
                         row: i,
@@ -79,17 +69,27 @@ class AlignmentMatrix extends React.Component {
                         correcValue: this.solutionMatrix[i][j],
                         incorrectValue: userMatrix[i][j]
                     };
+                   
+                    incorrectValueSet.add(i+"_"+j);
+
                     incorrectValueDataArray.push(incorrectValueData);
                 }
             }
         }
-        console.log(incorrectUserValues);
+        this.setState({
+            incorrectValueSet: incorrectValueSet
+        });
+
         userScore = 100 - (incorrectUserValues * 100 / ((userMatrix.length - 1) * (userMatrix[0].length - 1)));
         var result = {
             userScore: userScore,
             incorrectValueDataArray: incorrectValueDataArray
         };
-        console.log(result);
+
+        this.setState({
+            showResultMatrix: true
+        });
+
         return result;
     }
     
@@ -146,15 +146,20 @@ class AlignmentMatrix extends React.Component {
     }
 
     handleSubmit(){
+
+        if (!this.verifyUserMatrixValues()) {
+            alert("Please completely fill the game mode matrix");
+            return;
+        }
+
         const apiBaseUrl = "http://192.168.0.4:4200/";
         var payload = this.props.data;
 
         //ADD USER SCORE HERE
         var verifySolutionResult = this.verifySolution();
+
         payload.userScore = verifySolutionResult.userScore;
         console.log(verifySolutionResult);
-        //var failed = this.verifySolution();
-        alert(`User Score = ${payload.userScore}`);
         axios.post(apiBaseUrl + 'updateGameScore', payload)
             .then((response) => {
                 console.log(response.status);
@@ -162,44 +167,80 @@ class AlignmentMatrix extends React.Component {
     }
 
     onCellValueChange(cell) {
+        if (cell.value == '-') {
+            return;    
+        }
+
         if (isNaN(cell.value)) {
-            alert(`Please enter a number at row: ${cell.rowIndex + 1} and column ${cell.columnIndex + 1}`);
+            alert(`Please enter an integer at row: ${cell.rowIndex + 1} and column ${cell.columnIndex + 1}`);
             return;
         }
         var inputMatrix = this.userMatrix;
-        inputMatrix[cell.rowIndex][cell.columnIndex] = cell.value;
+        inputMatrix[cell.rowIndex][cell.columnIndex] = Number(cell.value);
+    }
+
+    getDirectionCode(code){
+        if(code === "d"){
+            return 8598;  
+        }else if(code === "u"){
+            return 8593;
+        }else if(code === "l"){
+            return 8592;
+        }
+
     }
 
     getDirectionCells() {
         var cells = [];
         let directionRowIndexStart = this.props.data.startOfDirectionString.row + 1;
         let directionColumnIndexStart = this.props.data.startOfDirectionString.column + 1;
-        let directionValues = this.props.data.directionString.split("");
+        let directionValues = undefined;
+        var directionString = this.props.data.directionString;
 
-        for(var i = 0 ; i < directionValues.length;i++){
-
+        if(directionString.length > 1) {
+            directionValues = this.props.data.directionString.split("");
+            for(var i = 0 ; i < directionValues.length;i++){
+                var cell = {
+                    row:directionRowIndexStart,
+                    column: directionColumnIndexStart,
+                    direction: undefined
+                };
+                //var direction = undefined;
+                var directionCode = directionValues[i];
+                if(directionCode === "d"){
+                    cell.direction = this.getDirectionCode(directionCode);
+                    directionRowIndexStart--;
+                    directionColumnIndexStart--;
+                }else if(directionCode === "u"){
+                    cell.direction = this.getDirectionCode(directionCode);
+                    directionRowIndexStart--;
+                }else if(directionCode === "l"){
+                    cell.direction = this.getDirectionCode(directionCode);
+                    directionColumnIndexStart--;
+                }
+                cells.push(cell);
+            }
+        }else if (directionString.length === 1) {
             var cell = {
                 row:directionRowIndexStart,
                 column: directionColumnIndexStart,
-                direction: undefined
+                direction: this.getDirectionCode(directionString)
             };
-            var direction = undefined;
-            var directionCode = directionValues[i];
-            if(directionCode === "d"){
-                cell.direction = 8598;
-                directionRowIndexStart--;
-                directionColumnIndexStart--;
-            }else if(directionCode === "u"){
-                cell.direction = 8593;
-                directionRowIndexStart--;
-            }else if(directionCode === "l"){
-                cell.direction = 8592;
-                directionColumnIndexStart--;
-            }
             cells.push(cell);
         }
 
         return cells;
+    }
+
+    verifyUserMatrixValues() {
+        for (let i = 1; i < this.userMatrix.length; i++) {
+            for (let j = 1; j < this.userMatrix[0].length; j++) {
+                if(isNaN(this.userMatrix[i][j])) {
+                    return false;
+                }
+            }
+        } 
+        return true;
     }
 
     getDirectionValue(row, column) {
@@ -217,6 +258,52 @@ class AlignmentMatrix extends React.Component {
         return direction;
     }
     
+    checkIncorrectValue(row, column) {
+        return this.state.incorrectValueSet.has(row+"_"+column);
+    }
+
+    unhideResultMatrix() {
+        if (this.state.showResultMatrix) {
+            let mode = "result";
+            let rowIndex;
+            let columnIndex;
+            let getHiddenStatus = this.isElementHidden.bind(this);
+            let onChangeHandler = this.onCellValueChange.bind(this);
+
+            let fetchDirectionValue = this.getDirectionValue.bind(this);
+            let incorrectValueSet = this.checkIncorrectValue.bind(this);
+
+            return (<div className={(this.state.showResultMatrix) ? "" : "hidden"}>
+                        <div className="alignment-matrix">
+                            {   
+                                this.matrix.map((row, i) => {
+                                    rowIndex = i;
+                                    return <div className="board-row"> 
+                                                { 
+                                                    row.map((element,j) => {
+                                                        console.log(this.state.incorrectValueSet);
+                                                        columnIndex = j;
+                                                        var cell;
+                                                        var directionValue = fetchDirectionValue(rowIndex, columnIndex);
+                                                        cell = {
+                                                            value: element,
+                                                            mode: mode,
+                                                            rowIndex: rowIndex,
+                                                            columnIndex: columnIndex,
+                                                            direction: directionValue,
+                                                            highlightText: incorrectValueSet(rowIndex, columnIndex)
+                                                        };
+                                                                                                                 
+                                                        return <Square data={cell} handleChange={onChangeHandler}/>
+                                                    }) 
+                                                }
+                                            </div>
+                                })
+                            }
+                            </div>
+                    </div>);
+        }
+    }
     render(){
     
         let mode = this.props.data.mode;
@@ -226,16 +313,16 @@ class AlignmentMatrix extends React.Component {
         let onChangeHandler = this.onCellValueChange.bind(this);
 
         let fetchDirectionValue = this.getDirectionValue.bind(this);
-
+        let incorrectValueSet = this.checkIncorrectValue.bind(this);
         return (
                 <div>
                     <div className="alignment-matrix">
                     {    
-                        this.matrix.map(function(row, i){
+                        this.matrix.map((row, i) => {
                             rowIndex = i;
                             return <div className="board-row"> 
                                         { 
-                                            row.map(function(element,j){
+                                            row.map((element,j) => {
                                                 columnIndex = j;
                                                 var cell;
                                                 if(mode === "demo"){
@@ -272,11 +359,17 @@ class AlignmentMatrix extends React.Component {
                         })
                     }
                     </div>
-                    <div className={(this.state.mode === "demo" || this.state.mode === "result") ? "hidden" : ""}>
-                        <button onClick={this.handleSubmit.bind(this)}>
-                            Submit!
-                        </button>
-                    </div>
+
+                    <br />
+                    <br />
+
+                    <MuiThemeProvider>
+                        <div className={(this.state.mode === "demo" || this.state.mode === "result") ? "hidden" : ""}>
+                            <RaisedButton onClick={this.handleSubmit.bind(this)} label = "Check Correctness" primary={true} />
+                        </div>
+                    </MuiThemeProvider>
+
+                    {this.unhideResultMatrix()}
 
                 </div>
             );

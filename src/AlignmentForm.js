@@ -34,6 +34,11 @@ export default class AlignmentForm extends Component {
   	}
 	//SANITISE THE INPUT, specifically gap
 	handleSubmit(event) {
+
+		this.setState ({
+			showMatrix: false
+		});
+
 		var apiBaseUrl = "http://192.168.0.4:4200/";
 		const re = /^(\+|-)?\d+$/;
 		const se = /^[AaCcGgTt]+$/;
@@ -58,10 +63,8 @@ export default class AlignmentForm extends Component {
 	 		if (this.state.mode === 0) {
 	 			payload.mode = "result";
 	 		} else if (this.state.mode === 1) {
-	 			payload.mode = "demo";
-	 		} else if (this.state.mode === 2) {
 	 			payload.mode = "game";
-	 		} 
+	 		}
 	 		
 	 		axios.post(apiBaseUrl + 'alignment', payload)
 	 		.then((response) => {
@@ -77,8 +80,6 @@ export default class AlignmentForm extends Component {
 			if (this.state.mode === 0) {
 	 			response.data.mode = "result";
 	 		} else if (this.state.mode === 1) {
-	 			response.data.mode = "demo";
-	 		} else if (this.state.mode === 2) {
 	 			response.data.mode = "game";
 	 		}
 
@@ -123,8 +124,7 @@ export default class AlignmentForm extends Component {
 			  				value={this.state.mode}
 			  				onChange = {(event,newValue) => this.setState({mode:newValue})}>
 	        				<MenuItem value={0} label="Result" primaryText="Result" />
-					        <MenuItem value={1} label="Demo" primaryText="Demo" />
-					        <MenuItem value={2} label="Game" primaryText="Game" />					        
+					        <MenuItem value={1} label="Game" primaryText="Game" />					        
 					    </SelectField>
 			  			<br />
 			  			<br />
@@ -141,7 +141,8 @@ export default class AlignmentForm extends Component {
 			  			</div>
 			  		</MuiThemeProvider>
 				</div>
-
+				<br />
+				<br />
 				{(this.state.showMatrix) ? <AlignmentMatrix data={this.state.props}/> : null}
 			</div>
 	  	);

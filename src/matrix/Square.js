@@ -10,7 +10,8 @@ class Square extends React.Component {
             hidden: props.data.hidden,
             isInput: props.data.isInput,
             rowIndex : props.data.rowIndex,
-            columnIndex: props.data.columnIndex
+            columnIndex: props.data.columnIndex,
+            highlightText: props.data.highlightText
         };
     }
 
@@ -26,7 +27,7 @@ class Square extends React.Component {
 
     onEdit(event) {
         //this.state.value = event.target.value;
-        var inputValue = Number(event.target.value);
+        var inputValue = (event.target.value);
         this.setState({
             value: inputValue,
             hidden: this.props.data.hidden,
@@ -81,7 +82,7 @@ class Square extends React.Component {
         if(direction){
             return (
                 <div>
-                    <div className="square" key={this.props.uniqueKey}>
+                    <div style = {{color: this.state.highlightText ? "red" : ""}} className="square" key={this.props.uniqueKey}>
                         { String.fromCharCode(direction) + " " +  this.props.data.value }
                     </div>
                 </div>
@@ -90,7 +91,7 @@ class Square extends React.Component {
         }else {
             return (
                 <div>
-                    <div className="square" key={this.props.uniqueKey}>
+                    <div style = {{color: this.state.highlightText ? "red" : ""}} className="square" key={this.props.uniqueKey}>
                         {this.props.data.value}
                     </div>
                 </div>
