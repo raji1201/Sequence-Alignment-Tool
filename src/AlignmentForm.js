@@ -137,6 +137,9 @@ export default class AlignmentForm extends Component {
 					    </SelectField>
 			  			<br />
 			  			<br />
+			  			NOTE : Mismatch score is taken as -1 and match score is taken as +1.
+			  			<br />
+			  			<br />
 			  			<RaisedButton label="Submit" primary={true} onClick={(event) => this.handleSubmit(event)}/>
 			  			</div>
 			  		</MuiThemeProvider>

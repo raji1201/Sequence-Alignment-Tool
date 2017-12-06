@@ -68,7 +68,7 @@ class Register extends Component {
                     <div>
                        <TextField
                          hintText="Enter your full name"
-                         floatingLabelText="Full Name"
+                         floatingLabelText="Name"
                          onChange = {(event,newValue) => this.setState({fullName:newValue})}
                          />
                         <br/>
